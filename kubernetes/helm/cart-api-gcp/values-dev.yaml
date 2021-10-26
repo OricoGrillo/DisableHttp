@@ -1,0 +1,15 @@
+deployment:
+  image: gcr.io/PROJECT_ID/IMAGE:TAG
+
+namespace: cart-api-gcp-develop
+name: cart-api-gcp
+
+ConfigMap:
+  name: authorization-config
+  data: 
+    ASPNETCORE_ENVIRONMENT: Development
+
+Secret:
+  name: authorization-secrets
+
+replicaCount: 1

@@ -1,0 +1,92 @@
+name: Build and Deploy to GKE DEV
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: windy-elevator-330220
+  IMAGE: cart-api-gcp
+  GKE_CLUSTER: autopilot-cluster-1
+  GKE_ZONE_DEV: us-central1
+  GCP_PROJECT: windy-elevator-330220
+
+jobs:
+
+  Build:
+    name: Build 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+    environment: production
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+        project_id: ${{ env.GCP_PROJECT }} #takes values from general secrets section
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - run: |-
+        gcloud --quiet auth configure-docker
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE_DEV }} #takes values from general secrets section
+        credentials: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+
+    # Build the Docker image
+    - name: Build
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+          .
+
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+
+  Deploy:
+    name: Deploy 
+    needs: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./kubernetes/helm
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+        project_id: ${{ env.PROJECT_ID }} #takes values from general secrets section
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }} #takes values from general secrets section
+        location: ${{ env.GKE_ZONE_DEV }} #takes values from general secrets section
+        credentials: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+    
+    # Install helm
+    - uses: azure/setup-helm@v1
+      id: install
+
+    # Deploy latest version
+    - run: helm upgrade --install -f ./cart-api-gcp/values-dev.yaml --set deployment.image=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA cart-api-gcp cart-api-gcp
+
