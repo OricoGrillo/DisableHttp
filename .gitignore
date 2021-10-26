@@ -1,0 +1,9 @@
+# dotenv environment variables file
+.env
+
+# Exclude bin folder
+bin/
+obj/
+
+# Exclude vs config files/folder
+.vscode/
