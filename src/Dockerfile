@@ -9,10 +9,10 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
-COPY ["src/cart-api-gcp.csproj", "src/"]
-RUN dotnet restore "src/cart-api-gcp.csproj"
+COPY ["cart-api-gcp.csproj", "src/"]
+RUN dotnet restore "cart-api-gcp.csproj"
 COPY . .
-WORKDIR "/src/src"
+WORKDIR "/src"
 RUN dotnet build "cart-api-gcp.csproj" -c Release -o /app/build
 
 FROM build AS publish
