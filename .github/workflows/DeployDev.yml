@@ -8,8 +8,8 @@ on:
 env:
   PROJECT_ID: windy-elevator-330220
   IMAGE: cart-api-gcp
-  GKE_CLUSTER: cluster-1
-  GKE_ZONE_DEV: us-central1-c
+  GKE_CLUSTER: autopilot-cluster-1
+  GKE_ZONE_DEV: us-central1
   GCP_PROJECT: windy-elevator-330220
 
 jobs:
