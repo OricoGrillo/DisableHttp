@@ -10,7 +10,7 @@ env:
   IMAGE: cart-api-gcp
   GKE_CLUSTER: autopilot-cluster-1-datadog
   GKE_ZONE_DEV: us-central1
-  GCP_PROJECT: datadog
+  GCP_PROJECT: datadog-334322
 
 jobs:
 
