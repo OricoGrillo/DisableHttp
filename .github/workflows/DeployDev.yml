@@ -9,7 +9,6 @@ env:
   PROJECT_ID: datadog-334322
   IMAGE: cart-api-gcp
   GKE_CLUSTER: autopilot-cluster-1-datadog
-  GKE_ZONE_DEV: us-central1
   GCP_PROJECT: datadog-334322
 
 jobs:
@@ -42,7 +41,7 @@ jobs:
     - uses: google-github-actions/get-gke-credentials@v0.2.1
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE_DEV }} #takes values from general secrets section
+        location: ${{ secrets.GKE_ZONE_DEV }} #takes values from general secrets section
         credentials: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
 
     # Build the Docker image
@@ -74,13 +73,13 @@ jobs:
     - uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         service_account_key: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
-        project_id: ${{ env.PROJECT_ID }} #takes values from general secrets section
+        project_id: ${{ secrets.GKE_PROJECT }} #takes values from general secrets section
 
     # Get the GKE credentials so we can deploy to the cluster
     - uses: google-github-actions/get-gke-credentials@v0.2.1
       with:
-        cluster_name: ${{ env.GKE_CLUSTER }} #takes values from general secrets section
-        location: ${{ env.GKE_ZONE_DEV }} #takes values from general secrets section
+        cluster_name: ${{ secrets.GKE_CLUSTER_DEV }} #takes values from general secrets section
+        location: ${{ secrets.GKE_ZONE_DEV }} #takes values from general secrets section
         credentials: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
     
     # Install helm
@@ -89,4 +88,3 @@ jobs:
 
     # Deploy latest version
     - run: helm upgrade --install -f ./cart-api-gcp/values-dev.yaml --set deployment.image=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA cart-api-gcp cart-api-gcp
-
