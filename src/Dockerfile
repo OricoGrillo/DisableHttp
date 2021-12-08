@@ -10,10 +10,10 @@ RUN TRACER_VERSION=$(curl -s \https://api.github.com/repos/DataDog/dd-trace-dotn
     && curl -Lo /tmp/datadog-dotnet-apm.deb https://github.com/DataDog/dd-trace-dotnet/releases/download/v${TRACER_VERSION}/datadog-dotnet-apm_${TRACER_VERSION}_amd64.deb
 
 WORKDIR /src
-COPY ["cart-api-gcp.csproj", "DatadogContainerExample/"]
-RUN dotnet restore "DatadogContainerExample/cart-api-gcp.csproj"
+COPY ["cart-api-gcp.csproj", "src/"]
+RUN dotnet restore "src/cart-api-gcp.csproj"
 COPY . .
-WORKDIR "/src/DatadogContainerExample"
+WORKDIR "/src"
 RUN dotnet build "cart-api-gcp.csproj" -c Release -o /app/build
  
 FROM build AS publish
