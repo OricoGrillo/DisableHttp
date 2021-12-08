@@ -9,7 +9,7 @@ metadata:
 spec:
   ports:
   - protocol: TCP
-    port: 443
+    port: 80
   selector:
     app: {{ .Values.name }}
   type: LoadBalancer
