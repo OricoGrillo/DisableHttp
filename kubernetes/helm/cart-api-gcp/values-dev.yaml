@@ -8,12 +8,12 @@ ConfigMap:
   name: authorization-config
   data: 
     ASPNETCORE_ENVIRONMENT: Development
-    DD_ENV: "core-local"
-    DD_SERVICE: "DatadogContainerExample"
-    DD_VERSION: "1.0.0"
-    DD_AGENT_HOST: "datadog-agent"
-    DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED: "true"
-    DD_RUNTIME_METRICS_ENABLED: "true"
+    DD_ENV: core-local
+    DD_SERVICE: DatadogContainerExample
+    DD_VERSION: 1.0.0
+    DD_AGENT_HOST: datadog-agent
+    DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED: true
+    DD_RUNTIME_METRICS_ENABLED: true
 
 Secret:
   name: authorization-secrets
