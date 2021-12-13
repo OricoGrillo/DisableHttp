@@ -46,4 +46,4 @@ jobs:
     # Deploy latest version
     - run: helm repo add datadog https://helm.datadoghq.com
     - run: helm repo update
-    - run: helm install datadog-release2 --set rbac.create=false --set datadog.apiKey='bec8189ee5154f324d8f692a6f050b94' datadog/datadog
+    - run: helm install RELEASE_NAME -f values-dev.yaml --set datadog.site='datadoghq.com' --set datadog.apiKey='bec8189ee5154f324d8f692a6f050b94' datadog/datadog 
