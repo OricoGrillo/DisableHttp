@@ -8,8 +8,8 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: {{ .Values.ConfigMap.data.ASPNETCORE_ENVIRONMENT }}
   DD_ENV: {{ .Values.ConfigMap.data.DD_ENV }}
-  DD_SERVICE: {{ .Values.ConfigMap.data.DD_SERVICE }}
-  DD_VERSION: {{ .Values.ConfigMap.data.DD_VERSION }}
-  DD_AGENT_HOST: {{ .Values.ConfigMap.data.DD_AGENT_HOST }}
-  DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED: {{ .Values.ConfigMap.data.DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED }}
-  DD_RUNTIME_METRICS_ENABLED: {{ .Values.ConfigMap.data.DD_RUNTIME_METRICS_ENABLED }}
+  # DD_SERVICE: {{ .Values.ConfigMap.data.DD_SERVICE }}
+  # DD_VERSION: {{ .Values.ConfigMap.data.DD_VERSION }}
+  # DD_AGENT_HOST: {{ .Values.ConfigMap.data.DD_AGENT_HOST }}
+  # DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED: {{ .Values.ConfigMap.data.DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED }}
+  # DD_RUNTIME_METRICS_ENABLED: {{ .Values.ConfigMap.data.DD_RUNTIME_METRICS_ENABLED }}
