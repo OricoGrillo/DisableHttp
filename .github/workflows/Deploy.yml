@@ -1,0 +1,50 @@
+name: Build and Deploy to GKE DEV
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: datadog-334322
+  IMAGE: cart-api-gcp
+  GKE_CLUSTER: autopilot-cluster-1-datadog
+  GKE_ZONE_DEV: us-central1
+  GCP_PROJECT: datadog-334322
+
+jobs:
+
+  Deploy:
+    name: Deploy 
+    needs: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./kubernetes
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+        project_id: ${{ secrets.GKE_PROJECT }} #takes values from general secrets section
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }} #takes values from general secrets section
+        location: ${{ env.GKE_ZONE_DEV }} #takes values from general secrets section
+        credentials: ${{ secrets.GKE_SA_KEY }} #takes values from general secrets section
+    
+    # Install helm
+    - uses: azure/setup-helm@v1
+      id: install
+
+    # Deploy latest version
+    - run: helm repo add datadog https://helm.datadoghq.com
+    - run: helm repo update
+    - run: helm install datadog -f datadog-values.yaml --set datadog.site='datadoghq.com' --set datadog.apiKey='bec8189ee5154f324d8f692a6f050b94' datadog/datadog 
