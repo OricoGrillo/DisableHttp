@@ -3,28 +3,16 @@
 targetSystem: "linux"
 datadog:
   apiKey: bec8189ee5154f324d8f692a6f050b94
-  # appKey: <DATADOG_APP_KEY>
-  # If not using secrets, then use apiKey and appKey instead
-  # apiKeyExistingSecret: <DATADOG_API_KEY_SECRET>
-  # appKeyExistingSecret: <DATADOG_APP_KEY_SECRET>
-  clusterName: <CLUSTER_NAME>
-  tags: []
-  # datadog.kubelet.tlsVerify should be `false` on kind and minikube
-  # to establish communication with the kubelet
-  # kubelet:
-    # tlsVerify: "false"
-  logs:
+  appKey: <DATADOG_APP_KEY>
+  clusterName: autopilot-cluster-1-datadog
+
+  # Enable the new `kubernetes_state_core` check.
+  kubeStateMetricsCore:
     enabled: true
-    containerCollectAll: false
-    containerCollectUsingFiles: true
-  apm:
-    enabled: true
-    socketPath: /var/run/datadog/apm.socket
-    hostSocketPath: /var/run/datadog/
-  processAgent:
-    enabled: true
-    processCollection: false
-  systemProbe:
-    enableTCPQueueLength: false
-    enableOOMKill: true
-    collectDNSStats: false
+  # Avoid deploying kube-state-metrics chart.
+  # The new `kubernetes_state_core` doesn't require to deploy the kube-state-metrics anymore.
+  kubeStateMetricsEnabled: false
+
+providers:
+  gke:
+    autopilot: true
