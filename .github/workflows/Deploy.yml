@@ -46,4 +46,10 @@ jobs:
     # Deploy latest version
     - run: helm repo add datadog https://helm.datadoghq.com
     - run: helm repo update
-    - run: helm install datadog-agent -f values.yaml  --set datadog.apiKey=bec8189ee5154f324d8f692a6f050b94 datadog/datadog --set targetSystem=linux
+    # - run: helm install datadog-agent -f values.yaml  --set datadog.apiKey=bec8189ee5154f324d8f692a6f050b94 datadog/datadog --set targetSystem=linux
+    - run: helm install --name datadog-agent --set datadog.apiKey=bec8189ee5154f324d8f692a6f050b94 --set clusterAgent.enabled=true 
+    --set clusterAgent.metricsProvider.enabled=true \
+    --set providers.gke.autopilot=true \
+    --set datadog.logs.enabled=true \
+    --set datadog.apm.enabled=true \
+    datadog/datadog
